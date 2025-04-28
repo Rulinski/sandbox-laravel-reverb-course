@@ -27,6 +27,6 @@ createInertiaApp({
 });
 
 
-Echo.channel('hello-world').listener("HelloWorld", (e) => {
+Echo.channel('hello-world').listen("HelloWorld", (e) => {
     console.log(e);
 })
