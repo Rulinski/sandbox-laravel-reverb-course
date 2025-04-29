@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\HelloWorld;
+use App\Events\MessageReceived;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,15 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+
+Route::post('/messages', function () {
+    $payload = request()->validate([
+        'message' => 'required',
+        'id' => 'required'
+    ]);
+    MessageReceived::dispatch($payload['message'], $payload['id']);
+    return response()->json(['message' => 'Message received!']);
 });
 
 Route::get('/visit-count', function () {
@@ -30,4 +40,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
