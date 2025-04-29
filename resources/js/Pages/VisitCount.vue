@@ -3,8 +3,12 @@ import {ref} from 'vue'
 
 const messages = ref([])
 const message = ref("")
+const props = defineProps({
+    user: Object
+})
+
 //listen Messages chanel
-Echo.private('messages').listen("MessageReceived", (e) => {
+Echo.private(`messages.${props.user.id}`).listen("MessageReceived", (e) => {
     if (!messages.value.find(m => m.id === e.id)) {
         messages.value.push(e);
     }
@@ -31,7 +35,7 @@ function handleSubmit() {
         </li>
     </ul>
     <form @submit.prevent="handleSubmit">
-        <textarea v-model="message"></textarea>
+        <textarea v-model="message" @keydown.ctrl.enter="handleSubmit"></textarea>
         <button class="btn btn-default">Send Message</button>
     </form>
 </template>
