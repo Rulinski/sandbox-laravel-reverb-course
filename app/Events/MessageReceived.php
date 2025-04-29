@@ -14,8 +14,9 @@ class MessageReceived implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
-    public $id;
+    public string $message;
+    public string $id;
+    public string $who;
 
     /**
      * Create a new event instance.
@@ -24,17 +25,18 @@ class MessageReceived implements ShouldBroadcast
     {
         $this->message = $message;
         $this->id = $id;
+        $this->who = auth()->user()->name ?? 'Anonymous moose';
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, PrivateChannel>
      */
     public function broadcastOn(): array
     {
         return [
-            new Channel('messages'),
+            new PrivateChannel('messages'),
         ];
     }
 }

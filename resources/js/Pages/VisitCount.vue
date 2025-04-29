@@ -4,12 +4,9 @@ import {ref} from 'vue'
 const messages = ref([])
 const message = ref("")
 //listen Messages chanel
-Echo.channel('messages').listen("MessageReceived", (e) => {
+Echo.private('messages').listen("MessageReceived", (e) => {
     if (!messages.value.find(m => m.id === e.id)) {
-        messages.value.push({
-            ...e,
-            who: "Other"
-        });
+        messages.value.push(e);
     }
 })
 
@@ -23,13 +20,14 @@ function handleSubmit() {
         who: "Me"
     })
     axios.post('/messages', msg)
+    message.value = ""
 }
 </script>
 
 <template>
     <ul>
         <li v-for="message in messages" :key="message.id">
-            {{ message.message }} - {{message.who}}
+            {{ message.message }} - {{ message.who }}
         </li>
     </ul>
     <form @submit.prevent="handleSubmit">
@@ -39,4 +37,5 @@ function handleSubmit() {
 </template>
 
 <style scoped>
+
 </style>
